@@ -15,7 +15,7 @@ permissions:
 # https://stackoverflow.com/a/72408109/6388696
 # https://docs.github.com/en/actions/using-jobs/using-concurrency#example-using-concurrency-to-cancel-any-in-progress-job-or-run
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: {{ '${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}' }}
   cancel-in-progress: true
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
           version: "latest"
           enable-cache: true
           # https://github.com/astral-sh/setup-uv?tab=readme-ov-file#github-authentication-token
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: {{ '${{ secrets.GITHUB_TOKEN }}' }}
           cache-suffix: "{{python_version}}"
       - name: Install dependencies
         run: uv sync --frozen --extra docs
@@ -53,7 +53,7 @@ jobs:
 
   unit_tests:
     needs: [linting]
-    runs-on: ${{ matrix.platform }}
+    runs-on: {{ '${{ matrix.platform }}' }}
     strategy:
       max-parallel: 4
       matrix:
@@ -67,10 +67,10 @@ jobs:
           version: "latest"
           enable-cache: true
           # https://github.com/astral-sh/setup-uv?tab=readme-ov-file#github-authentication-token
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          cache-suffix: ${{ matrix.python-version }}
-      - name: Pin python-version ${{ matrix.python-version }}
-        run: uv python pin ${{ matrix.python-version }}
+          github-token: {{ '${{ secrets.GITHUB_TOKEN }}' }}
+          cache-suffix: {{ '${{ matrix.python-version }}' }}
+      - name: Pin python-version {{ '${{ matrix.python-version }}' }}
+        run: uv python pin {{ '${{ matrix.python-version }}' }}
       - name: Install dependencies
         run: uv sync --frozen
       - name: Test with pytest
@@ -78,7 +78,7 @@ jobs:
       - name: Store coverage report as an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-reports-unit-tests-${{ matrix.platform }}-${{ matrix.python-version }}
+          name: {{ 'coverage-reports-unit-tests-${{ matrix.platform }}-${{ matrix.python-version }}' }}
           path: ./coverage.xml
 
   # https://about.codecov.io/blog/uploading-code-coverage-in-a-separate-job-on-github-actions/
@@ -101,6 +101,6 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: {{ '${{ secrets.CODECOV_TOKEN }}' }}
           directory: coverage_reports
           fail_ci_if_error: true

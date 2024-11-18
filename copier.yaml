@@ -1,0 +1,22 @@
+# questions
+tool_name:
+  type: str
+  question: "What is the name of this new python tool?"
+  required: true
+  help: "The name of the new python module."
+python_version:
+  type: str
+  question: "What is the python version?"
+  required: true
+  help: "The python version to use."
+  default: "3.12"
+your_name:
+  type: str
+  question: "What is your name?"
+  required: false
+  default: "FirstName LastName"
+your_email:
+  type: str
+  question: "What is your email address?"
+  required: false
+  default: "your_email_address@your_domain.com"
